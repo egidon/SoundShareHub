@@ -1,0 +1,225 @@
+﻿
+    /************************************************************/
+    /*****              SqlDataProvider                     *****/
+    /*****                                                  *****/
+    /*****                                                  *****/
+    /***** Note: To manually execute this script you must   *****/
+    /*****       perform a search and replace operation     *****/
+    /*****       for {databaseOwner} and {objectQualifier}  *****/
+    /*****                                                  *****/
+    /************************************************************/
+
+    IF EXISTS(SELECT * FROM sys.objects WHERE [object_id] = OBJECT_ID(N'[SOUNDSHAREHUB_Users]') AND type in (N'U'))
+	    DROP TABLE[SOUNDSHAREHUB_Users]
+    GO
+    CREATE TABLE SOUNDSHAREHUB_Users (
+        UserID INT IDENTITY(1,1) PRIMARY KEY,
+        Username NVARCHAR(100),
+        FirstName NVARCHAR(100),
+        LastName NVARCHAR(100),
+        IsSuperUser BIT NULL,
+        Email NVARCHAR(256) NULL,
+        DisplayName NVARCHAR(128) NULL,
+        Password NVARCHAR(100) NULL,
+        PhoneNo NVARCHAR(100) NULL,
+        DOB DATETIME NULL,
+        LastIPAddress NVARCHAR(50) NULL,
+        IsDeleted BIT NULL,
+        CreatedByUserID INT NULL,
+        CreatedOnDate DATETIME NULL,
+        LastModifiedByUserID INT NULL,
+        LastModifiedOnDate DATETIME NULL,
+        PasswordResetToken UNIQUEIDENTIFIER NULL,
+        PasswordResetExpiration DATETIME NULL
+    );
+    GO
+
+    IF EXISTS(SELECT * FROM sys.objects WHERE [object_id] = OBJECT_ID(N'[SOUNDSHAREHUB_UserRoles]') AND type in (N'U'))
+	    DROP TABLE[SOUNDSHAREHUB_UserRoles]
+    GO
+    CREATE TABLE SOUNDSHAREHUB_UserRoles (
+        UserRoleID INT IDENTITY(1,1) PRIMARY KEY,
+        UserID INT NULL,
+        RoleID INT NULL,
+        ExpiryDate DATETIME NULL,
+        IsTrialUsed BIT NULL,
+        EffectiveDate DATETIME NULL,
+        CreatedByUserID INT NULL,
+        CreatedOnDate DATETIME NULL,
+        LastModifiedOnDate DATETIME NULL,
+        Status INT NULL,
+        IsOwner BIT NULL
+    );
+    GO
+
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'SOUNDSHAREHUB_Roles')
+        DROP TABLE SOUNDSHAREHUB_Roles
+    GO
+
+    CREATE TABLE SOUNDSHAREHUB_Roles (
+        RoleID INT IDENTITY(1,1) PRIMARY KEY,
+        RoleName NVARCHAR(50) NULL,
+        Description NVARCHAR(1000) NULL,
+        ServiceFee MONEY NULL,
+        BillingFrequency CHAR(1) NULL,
+        TrialPeriod INT NULL,
+        TrialFrequency CHAR(1) NULL,
+        BillingPeriod INT NULL,
+        TrialFee MONEY NULL,
+        RoleGroupID INT NULL,
+        CreatedByUserID INT NULL,
+        CreatedOnDate DATETIME NULL,
+        LastModifiedByUserID INT NULL,
+        LastModifiedOnDate DATETIME NULL,
+        Status INT NULL
+    );
+    GO
+
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'SOUNDSHAREHUB_RoleGroups')
+        DROP TABLE SOUNDSHAREHUB_RoleGroups
+    GO
+    CREATE TABLE SOUNDSHAREHUB_RoleGroups (
+        RoleGroupID INT IDENTITY(1,1) PRIMARY KEY,
+        RoleGroupName NVARCHAR(50) NULL,
+        Description NVARCHAR(1000) NULL,
+        CreatedByUserID INT NULL,
+        CreatedOnDate DATETIME NULL,
+        LastModifiedByUserID INT NULL,
+        LastModifiedOnDate DATETIME NULL
+    );
+    GO
+
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'SOUNDSHAREHUB_Cookies')
+        DROP TABLE SOUNDSHAREHUB_Cookies
+    GO
+    CREATE TABLE SOUNDSHAREHUB_Cookies (
+        CookieId INT PRIMARY KEY IDENTITY(1,1),
+        CookieValue NVARCHAR(200) NULL,
+        ExpiresOn DATETIME NULL,
+        UserId INT NULL,
+        CreatedOn DATETIME NULL,
+        UpdatedOn DATETIME NULL
+    );
+    GO
+
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'SOUNDSHAREHUB_AudioContent')
+        DROP TABLE SOUNDSHAREHUB_AudioContent
+    GO
+    CREATE TABLE SOUNDSHAREHUB_AudioContent (
+        AudioId INT PRIMARY KEY IDENTITY(1,1),
+        title NVARCHAR(500) NULL,
+        Description NVARCHAR(1000) NULL,
+        ImgUrl NVARCHAR(500) NULL,
+        IsActive bit NULL,
+        IsDeleted bit NULL,
+        CreatedByUserID INT NULL,
+        CreatedOnDate DATETIME NULL,
+        LastModifiedByUserID INT NULL,
+        LastModifiedOnDate DATETIME NULL
+    );
+    GO
+
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'SOUNDSHAREHUB_Comment')
+        DROP TABLE SOUNDSHAREHUB_Comment
+    GO
+    CREATE TABLE SOUNDSHAREHUB_Comment (
+        CommentId INT PRIMARY KEY IDENTITY(1,1),
+        Comment NVARCHAR(4000) NULL,
+        IsActive bit NULL,
+        IsDeleted bit NULL,
+        CreatedByUserID INT NULL,
+        CreatedOnDate DATETIME NULL,
+        LastModifiedByUserID INT NULL,
+        LastModifiedOnDate DATETIME NULL
+    );
+    GO
+
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'SOUNDSHAREHUB_CommentLikeDislike')
+        DROP TABLE SOUNDSHAREHUB_CommentLikeDislike
+    GO
+    CREATE TABLE SOUNDSHAREHUB_CommentLikeDislike (
+        Id INT PRIMARY KEY IDENTITY(1,1),
+        CommentId INT NULL,
+        IsLiked bit NULL,
+        IsDisliked bit NULL,
+        CreatedByUserID INT NULL,
+        CreatedOnDate DATETIME NULL,
+        LastModifiedByUserID INT NULL,
+        LastModifiedOnDate DATETIME NULL
+    );
+    GO
+
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'SOUNDSHAREHUB_CommentReply')
+        DROP TABLE SOUNDSHAREHUB_CommentReply
+    GO
+    CREATE TABLE SOUNDSHAREHUB_CommentReply (
+        ReplyId INT PRIMARY KEY IDENTITY(1,1),
+        CommentId INT NULL,
+        Reply nvarchar(4000) NULL,
+        CreatedByUserID INT NULL,
+        CreatedOnDate DATETIME NULL,
+        LastModifiedByUserID INT NULL,
+        LastModifiedOnDate DATETIME NULL
+    );
+    GO
+
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'SOUNDSHAREHUB_CommentReplyLikeDislike')
+        DROP TABLE SOUNDSHAREHUB_CommentReplyLikeDislike
+    GO
+    CREATE TABLE SOUNDSHAREHUB_CommentReplyLikeDislike (
+        Id INT PRIMARY KEY IDENTITY(1,1),
+        ReplyId INT NULL,
+        IsLiked bit NULL,
+        IsDisliked bit NULL,
+        CreatedByUserID INT NULL,
+        CreatedOnDate DATETIME NULL,
+        LastModifiedByUserID INT NULL,
+        LastModifiedOnDate DATETIME NULL
+    );
+    GO
+
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'SOUNDSHAREHUB_CommentShare')
+        DROP TABLE SOUNDSHAREHUB_CommentShare
+    GO
+    CREATE TABLE SOUNDSHAREHUB_CommentShare (
+        Id INT PRIMARY KEY IDENTITY(1,1),
+        CommentId INT NULL,
+        IsShared bit NULL,
+        SharedByUserID INT NULL,
+        SharedWithUserID INT NULL,
+        CreatedOnDate DATETIME NULL
+    );
+    GO
+
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'SOUNDSHAREHUB_AudioHistory')
+        DROP TABLE SOUNDSHAREHUB_AudioHistory
+    GO
+    CREATE TABLE SOUNDSHAREHUB_AudioHistory (
+        Id INT PRIMARY KEY IDENTITY(1,1),
+        AudioId INT NULL,
+        ListenedByUserID INT NULL,
+        ListenedOnDate DATETIME NULL
+    );
+    GO
+
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'SOUNDSHAREHUB_SearchHistory')
+        DROP TABLE SOUNDSHAREHUB_SearchHistory
+    GO
+    CREATE TABLE SOUNDSHAREHUB_SearchHistory (
+        Id INT PRIMARY KEY IDENTITY(1,1),
+        AudioId INT NULL,
+        SearchedOnDate datetime NULL,
+        SearchedByUserID INT NULL
+    );
+    GO
+
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'SOUNDSHAREHUB_CommentHistory')
+        DROP TABLE SOUNDSHAREHUB_CommentHistory
+    GO
+    CREATE TABLE SOUNDSHAREHUB_CommentHistory (
+        Id INT PRIMARY KEY IDENTITY(1,1),
+        CommentId INT NULL,
+        CreatedByUserID INT NULL,
+        CreatedOnDate DATETIME NULL
+    );
+    GO
