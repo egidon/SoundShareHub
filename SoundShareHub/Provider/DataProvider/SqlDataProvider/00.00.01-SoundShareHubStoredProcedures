@@ -1,0 +1,37 @@
+﻿
+    /************************************************************/
+    /*****              SqlDataProvider                     *****/
+    /*****                                                  *****/
+    /*****                                                  *****/
+    /***** Note: To manually execute this script you must   *****/
+    /*****       perform a search and replace operation     *****/
+    /*****       for {databaseOwner} and {objectQualifier}  *****/
+    /*****       if any                                     *****/
+    /************************************************************/
+if exists (select * from dbo.sysobjects where id =object_id(N'[SOUNDSHAREHUB_CreateNewUser]'))
+drop procedure [SOUNDSHAREHUB_CreateNewUser]
+GO
+CREATE PROCEDURE SOUNDSHAREHUB_CreateNewUser
+    @Username NVARCHAR(100),
+    @Firstname NVARCHAR(100),
+    @Lastname NVARCHAR(100),
+    @Issuperuser BIT,
+    @Email NVARCHAR(256),
+    @Displayname NVARCHAR(128),
+    @Password NVARCHAR(100),
+    @Phoneno NVARCHAR(100),
+    @dob DATETIME,
+    @Lastipaddress NVARCHAR(50),
+    @Isdeleted BIT,
+    @Createdbyuserid INT
+AS
+    BEGIN
+        INSERT INTO SOUNDSHAREHUB_Users (Username, FirstName, LastName, IsSuperUser,
+        Email, DisplayName, Password, PhoneNo, DOB, LastIPAddress, IsDeleted,
+        CreatedByUserID, CreatedOnDate, LastModifiedByUserID, LastModifiedOnDate,
+        PasswordResetToken, PasswordResetExpiration)
+        VALUES (@Username,@Firstname, @Lastname, @Issuperuser, @Email, @Displayname,
+        @Password, @Phoneno, @dob, @Lastipaddress, @Isdeleted, @Createdbyuserid, 
+        GETDATE(), @Createdbyuserid, GETDATE(), null, null);
+    END
+GO
